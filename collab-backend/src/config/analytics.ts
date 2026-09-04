@@ -1,4 +1,4 @@
-import { prisma } from './db';
+import { prisma } from './db.js';
 
 export async function initializeAnalyticsViews() {
   console.log('📊 Initializing Dynamic SQL Analytics View Engine...');

@@ -1,19 +1,12 @@
 import { PrismaClient } from '@prisma/client';
-import Redis from 'ioredis';
-import dotenv from 'dotenv';
+import RedisPkg from 'ioredis';
 
-dotenv.config();
-
-// Initialize the Prisma Client for PostgreSQL queries
+// Instantiate Prisma client
 export const prisma = new PrismaClient();
 
-// Initialize the Redis Client for high-speed tracking and cache storage
-export const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
+// Instantiate Redis using default safe import resolution fallbacks
+// @ts-ignore
+const RedisConstructor = RedisPkg.default || RedisPkg;
+export const redis = new RedisConstructor(process.env.REDIS_URL || 'redis://localhost:6379');
 
-redis.on('connect', () => {
-  console.log('📶 Core Redis Matrix Engine connected successfully');
-});
-
-redis.on('error', (err) => {
-  console.error('❌ Redis Connection Error:', err);
-});
+console.log('🔗 Database connection wrappers initialized successfully.');
