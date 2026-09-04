@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Real-time collaboration app microservice engine",
   "main": "dist/server.js",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "db:init": "prisma init",
     "db:push": "prisma db push",
