@@ -7,7 +7,7 @@ import { prisma } from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import boardRoutes from './routes/boardRoutes.js';
 import { setupSocketHandlers } from './sockets/socketHandler.js';
-import { initializeAnalyticsViews } from './config/analytics.js'; // Added
+import { initializeAnalyticsViews } from './config/analytics.js';
 
 dotenv.config();
 
@@ -41,5 +41,5 @@ setupSocketHandlers(io);
 // Bootstrap our custom SQL views cleanly into PostgreSQL container spaces
 httpServer.listen(PORT, async () => {
   console.log(`🚀 Real-time architecture cluster operating flawlessly on port ${PORT}`);
-  await initializeAnalyticsViews(); // Added
+  await initializeAnalyticsViews();
 });

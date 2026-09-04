@@ -1,13 +1,13 @@
 import { Router } from 'express';
-import { authenticateToken } from '../middleware/auth';
+import { authenticateToken } from '../middleware/auth.js';
 import { 
   createOrganization, 
   createProject, 
   getProjectBoard, 
   createTask, 
   updateTaskPosition 
-} from '../controllers/boardController';
-import { getWorkspaceMetrics } from '../controllers/analyticsController';
+} from '../controllers/boardController.js';
+import { getWorkspaceMetrics } from '../controllers/analyticsController.js';
 
 const router = Router();
 
