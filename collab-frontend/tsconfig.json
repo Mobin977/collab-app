@@ -16,7 +16,7 @@
 
     /* Relaxed Linting Options to ensure cloud deployment success */
     "strict": false,
-    "noNoImplicitAny": false,
+    "noImplicitAny": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": false
