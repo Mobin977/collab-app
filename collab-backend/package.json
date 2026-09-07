@@ -9,7 +9,7 @@
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "tsc && prisma generate && prisma db push",
     "start": "node dist/server.js",
     "test:backend": "tsx src/test-backend.ts"
   },
