@@ -14,13 +14,37 @@ dotenv.config();
 const app = express();
 const httpServer = createServer(app);
 
+// Dynamic CORS verification function for multiple environments
+const whitelistChecker = (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+  if (!origin) return callback(null, true);
+  
+  // Accept any of your deployment subdomains ending in .vercel.app or local testing environments
+  const isAllowed = /vercel\.app$/.test(origin) || origin.includes('localhost:');
+  
+  if (isAllowed) {
+    callback(null, true);
+  } else {
+    callback(new Error('Blocked by security firewall (CORS Policy)'));
+  }
+};
+
+// Mount dynamic validation to the Socket.io WebSocket network layer
 const io = new Server(httpServer, {
-  cors: { origin: '*', methods: ['GET', 'POST', 'PUT', 'DELETE'] },
+  cors: { 
+    origin: whitelistChecker, 
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+  },
 });
 
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+// Mount dynamic validation to the Express HTTP REST layer
+app.use(cors({
+  origin: whitelistChecker,
+  credentials: true
+}));
+
 app.use(express.json());
 
 // Mount our routing layout networks
