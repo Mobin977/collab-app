@@ -5,8 +5,8 @@ const SocketContext = createContext<Socket | null>(null);
 
 export const useSocket = () => useContext(SocketContext);
 
-// Dynamic address selector resolving to your live Render endpoint in production
-const BACKEND_URL = import.meta.env.VITE_API_URL || 'https://onrender.com';
+// 🛠️ FIXED: Swapped generic domain out for your precise live cloud production backend endpoint link
+const BACKEND_URL = import.meta.env.VITE_API_URL || 'https://collab-backend-api.onrender.com';
 
 export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [socket, setSocket] = useState<Socket | null>(null);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSocket } from '../context/SocketContext';
-import { Search, Plus, X } from 'lucide-react';
+import { Search, Plus, X, Send } from 'lucide-react';
 
 interface Task {
   id: string;
@@ -22,7 +22,8 @@ interface ChatMessage {
   authorName: string;
 }
 
-const BACKEND_URL = import.meta.env.VITE_API_URL || 'https://onrender.com';
+// 🛠️ FIXED: Swapped generic placeholder out for your exact live production backend container link
+const BACKEND_URL = import.meta.env.VITE_API_URL || 'https://collab-backend-api.onrender.com';
 
 export const KanbanBoard: React.FC<{ projectId: string; user: any }> = ({ projectId, user }) => {
   const socket = useSocket();
@@ -54,7 +55,6 @@ export const KanbanBoard: React.FC<{ projectId: string; user: any }> = ({ projec
         }
       } catch (error) {
         console.warn('⚠️ Falling back to clean placeholder structure targets...');
-        // Standard baseline schema targets if the backend database tables are fresh
         setColumns([
           {
             id: 'col-todo',
@@ -133,7 +133,7 @@ export const KanbanBoard: React.FC<{ projectId: string; user: any }> = ({ projec
       socket.off('chat:message:received');
     };
   }, [socket, projectId, user]);
-  // --- 3. HTML5 DRAG AND DROP HANDLERS ---
+    // --- 3. HTML5 DRAG AND DROP HANDLERS ---
   const handleDragStart = (e: React.DragEvent, taskId: string) => {
     e.dataTransfer.setData('text/plain', taskId);
     e.dataTransfer.effectAllowed = 'move';
@@ -310,6 +310,41 @@ export const KanbanBoard: React.FC<{ projectId: string; user: any }> = ({ projec
           );
         })}
       </div>
+
+      {/* 🚀 INJECTED CHAT CONTAINER UI BLOCK */}
+      <div style={{ display: 'flex', flexDirection: 'column', height: '400px', backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '16px', padding: '20px', gap: '12px', marginTop: '24px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #27272a', paddingBottom: '10px' }}>
+          <span style={{ fontSize: '13px', fontWeight: 600, color: '#e4e4e7' }}>📢 Live Team Workspace Feed</span>
+          <span style={{ fontSize: '10px', backgroundColor: '#4f46e5', color: '#fff', padding: '2px 8px', borderRadius: '20px', fontWeight: 'bold' }}>{messages.length}</span>
+        </div>
+
+        <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px', paddingRight: '4px' }}>
+          {messages.length === 0 ? (
+            <div style={{ color: '#71717a', fontSize: '11px', fontStyle: 'italic', margin: 'auto' }}>No workspace announcements yet. Broadcast a sync alert below!</div>
+          ) : (
+            messages.map((msg, idx) => (
+              <div key={idx} style={{ backgroundColor: '#09090b', border: '1px solid #27272a', padding: '10px', borderRadius: '10px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                <span style={{ fontSize: '10px', fontWeight: 600, color: '#818cf8' }}>{msg.authorName}</span>
+                <p style={{ color: '#f4f4f5', fontSize: '12px', margin: 0 }}>{msg.text}</p>
+              </div>
+            ))
+          )}
+        </div>
+
+        <form onSubmit={handleSendChat} style={{ display: 'flex', gap: '8px' }}>
+          <input 
+            type="text" 
+            value={chatInput}
+            onChange={e => setChatInput(e.target.value)}
+            placeholder="Type your real-time sync announcement..."
+            style={{ flex: 1, backgroundColor: '#09090b', border: '1px solid #27272a', borderRadius: '8px', padding: '8px 12px', color: '#f4f4f5', fontSize: '12px', outline: 'none' }}
+          />
+          <button type="submit" style={{ backgroundColor: '#4f46e5', border: 'none', color: '#fff', padding: '0 14px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Send size={14} />
+          </button>
+        </form>
+      </div>
+
     </div>
   );
 };
