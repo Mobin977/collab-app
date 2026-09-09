@@ -38,40 +38,70 @@ export default function App() {
 
   return (
     <SocketProvider>
-      {/* 🚀 FIXED: Changed from a locked h-screen box to min-h-screen to allow natural downward vertical scrolling */}
-      <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans flex flex-col pb-12">
+      <div style={{ minHeight: '100vh', backgroundColor: '#09090b', color: '#f4f4f5', fontFamily: 'sans-serif', display: 'flex', flexDirection: 'column', paddingBottom: '48px' }}>
         
-        {/* Workspace Top Global Navigation Bar - Sticky position so it stays fixed while you scroll down */}
-        <header className="h-16 border-b border-zinc-800 bg-zinc-900/50 px-6 flex items-center justify-between backdrop-blur-md shrink-0 sticky top-0 z-50">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold tracking-wider text-sm shadow-indigo-500/20 shadow-md">Ω</div>
-            <span className="font-bold tracking-tight text-sm uppercase text-zinc-200">CollabMesh Board</span>
+        {/* 🛠️ ROBUST FIXED HEADER BLOCK: Complete architectural inline alignment reset */}
+        <header style={{ 
+          height: '64px', 
+          borderBottom: '1px solid #27272a', 
+          backgroundColor: '#18181b', 
+          padding: '0 24px', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between',
+          position: 'sticky',
+          top: 0,
+          zIndex: 50
+        }}>
+          {/* Left Side: Branding and Emblem */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ width: '32px', height: '32px', borderRadius: '8px', backgroundColor: '#4f46e5', display: 'flex', alignItems: 'center', justifyCenter: 'center', fontWeight: 'bold', fontSize: '14px', boxShadow: '0 4px 6px -1px rgba(79, 70, 229, 0.2)' }}>
+              <span style={{ margin: 'auto' }}>Ω</span>
+            </div>
+            <span style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '-0.025em', textTransform: 'uppercase', color: '#e4e4e7' }}>CollabMesh Board</span>
           </div>
           
-          <div className="flex items-center gap-4">
-            <div className="flex flex-col text-right">
-              <span className="text-xs font-semibold text-zinc-200">{user?.fullName || 'Active Collaborator'}</span>
-              <span className="text-[10px] text-zinc-500 font-mono tracking-tight">{user?.email}</span>
+          {/* Right Side: Identity Details & Actions Panel */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'right', gap: '2px' }}>
+              <span style={{ fontSize: '12px', fontWeight: 600, color: '#f4f4f5' }}>{user?.fullName || 'Active Collaborator'}</span>
+              <span style={{ fontSize: '10px', color: '#71717a', fontFamily: 'monospace' }}>{user?.email}</span>
             </div>
             <button
               onClick={handleLogout}
-              className="text-xs bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 px-3 py-1.5 rounded-lg border border-zinc-800 hover:border-zinc-700 transition-all font-medium cursor-pointer"
+              style={{ 
+                fontSize: '11px', 
+                backgroundColor: '#09090b', 
+                color: '#a1a1aa', 
+                padding: '6px 12px', 
+                borderRadius: '8px', 
+                border: '1px solid #27272a', 
+                cursor: 'pointer', 
+                fontWeight: 500,
+                transition: 'all 0.2s'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = '#27272a';
+                e.currentTarget.style.color = '#f4f4f5';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = '#09090b';
+                e.currentTarget.style.color = '#a1a1aa';
+              }}
             >
               Sign Out
             </button>
           </div>
         </header>
 
-        {/* Unified Document Layout Structure Area */}
-        <div className="flex-1 w-full max-w-7xl mx-auto flex flex-col px-4">
+        {/* Workspace Canvas Container */}
+        <div style={{ flex: 1, width: '100%', maxWidth: '1280px', margin: '0 auto', display: 'flex', flexDirection: 'column', padding: '0 16px' }}>
           
-          {/* Mount the Real-Time SQL Metrics Dashboard Grid */}
-          <div className="pt-6 shrink-0">
+          <div style={{ paddingTop: '24px' }}>
             <AnalyticsDashboard />
           </div>
 
-          {/* Mount the Interactive Team Task Columns & Chat Feed Container */}
-          <div className="flex-1 w-full">
+          <div style={{ flex: 1, width: '100%' }}>
             <KanbanBoard projectId="default-project-space" user={user || { fullName: 'Collaborator' }} />
           </div>
 
