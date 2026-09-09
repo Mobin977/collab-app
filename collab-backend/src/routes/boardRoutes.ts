@@ -25,7 +25,7 @@ router.get('/projects/:projectId/board', getProjectBoard);
 router.post('/tasks', createTask);
 router.patch('/tasks/:taskId/position', updateTaskPosition);
 
-// --- 4. HIGH-PERFORMANCE SQL METRICS PATHWAYS ---
-router.get('/analytics/velocity', getWorkspaceMetrics);
+// 🛠️ FIXED: Appended the project ID parameter suffix variable to cleanly match frontend tracking fetch loops!
+router.get('/analytics/velocity/:projectId', getWorkspaceMetrics);
 
 export default router;
