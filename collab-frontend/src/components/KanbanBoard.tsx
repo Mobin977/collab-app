@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSocket } from '../context/SocketContext';
-import { Search, Plus, X, Send } from 'lucide-react';
+import { Search, Plus, X, Send, Trash2, Broom } from 'lucide-react';
 
 interface Task {
   id: string;
@@ -22,8 +22,7 @@ interface ChatMessage {
   authorName: string;
 }
 
-// 🛠️ FIXED: Swapped generic placeholder out for your exact live production backend container link
-const BACKEND_URL = import.meta.env.VITE_API_URL || 'https://collab-backend-api.onrender.com';
+const BACKEND_URL = import.meta.env.VITE_API_URL || 'https://onrender.com';
 
 export const KanbanBoard: React.FC<{ projectId: string; user: any }> = ({ projectId, user }) => {
   const socket = useSocket();
@@ -72,7 +71,6 @@ export const KanbanBoard: React.FC<{ projectId: string; user: any }> = ({ projec
 
     fetchBoardData();
   }, [projectId]);
-
   // --- 2. WEBSOCKET REAL-TIME COMMUNICATIONS EVENT HOOKS ---
   useEffect(() => {
     if (!socket) return;
@@ -126,14 +124,24 @@ export const KanbanBoard: React.FC<{ projectId: string; user: any }> = ({ projec
       setMessages(prev => [...prev, msg]);
     });
 
+    socket.on('chat:message:deleted', (messageId: string) => {
+      setMessages(prev => prev.filter(msg => msg.messageId !== messageId));
+    });
+
+    socket.on('chat:message:cleared', () => {
+      setMessages([]);
+    });
+
     return () => {
       socket.off('presence:updated');
       socket.off('task:moved');
       socket.off('task:added');
       socket.off('chat:message:received');
+      socket.off('chat:message:deleted');
+      socket.off('chat:message:cleared');
     };
   }, [socket, projectId, user]);
-    // --- 3. HTML5 DRAG AND DROP HANDLERS ---
+  // --- 3. HTML5 DRAG AND DROP HANDLERS ---
   const handleDragStart = (e: React.DragEvent, taskId: string) => {
     e.dataTransfer.setData('text/plain', taskId);
     e.dataTransfer.effectAllowed = 'move';
@@ -211,7 +219,7 @@ export const KanbanBoard: React.FC<{ projectId: string; user: any }> = ({ projec
 
     const payload = {
       projectId,
-      messageId: Math.random().toString(),
+      messageId: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
       text: chatInput,
       authorName: user.fullName
     };
@@ -220,6 +228,15 @@ export const KanbanBoard: React.FC<{ projectId: string; user: any }> = ({ projec
     setChatInput('');
   };
 
+  const handleDeleteMessage = (messageId: string) => {
+    if (!socket) return;
+    socket.emit('chat:message:delete', { projectId, messageId });
+  };
+
+  const handleClearAllChat = () => {
+    if (!socket || !window.confirm("Clear the entire room conversation channel?")) return;
+    socket.emit('chat:message:clear_all', projectId);
+  };
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', backgroundColor: '#09090b', width: '100%', paddingBottom: '40px' }}>
       
@@ -311,21 +328,48 @@ export const KanbanBoard: React.FC<{ projectId: string; user: any }> = ({ projec
         })}
       </div>
 
-      {/* 🚀 INJECTED CHAT CONTAINER UI BLOCK */}
+      {/* 📢 CHAT INTERFACE SIDEBAR COMPONENT PANEL LAYOUT WIDGET */}
       <div style={{ display: 'flex', flexDirection: 'column', height: '400px', backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '16px', padding: '20px', gap: '12px', marginTop: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #27272a', paddingBottom: '10px' }}>
-          <span style={{ fontSize: '13px', fontWeight: 600, color: '#e4e4e7' }}>📢 Live Team Workspace Feed</span>
-          <span style={{ fontSize: '10px', backgroundColor: '#4f46e5', color: '#fff', padding: '2px 8px', borderRadius: '20px', fontWeight: 'bold' }}>{messages.length}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '13px', fontWeight: 600, color: '#e4e4e7' }}>📢 Live Team Workspace Feed</span>
+            <span style={{ fontSize: '10px', backgroundColor: '#4f46e5', color: '#fff', padding: '2px 8px', borderRadius: '20px', fontWeight: 'bold' }}>{messages.length}</span>
+          </div>
+          
+          {messages.length > 0 && (
+            <button 
+              onClick={handleClearAllChat}
+              style={{ display: 'flex', alignItems: 'center', gap: '4px', backgroundColor: 'transparent', border: 'none', color: '#f87171', fontSize: '11px', cursor: 'pointer', fontWeight: 500 }}
+            >
+              <Broom size={12} /> Clear Feed
+            </button>
+          )}
         </div>
 
         <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px', paddingRight: '4px' }}>
           {messages.length === 0 ? (
             <div style={{ color: '#71717a', fontSize: '11px', fontStyle: 'italic', margin: 'auto' }}>No workspace announcements yet. Broadcast a sync alert below!</div>
           ) : (
-            messages.map((msg, idx) => (
-              <div key={idx} style={{ backgroundColor: '#09090b', border: '1px solid #27272a', padding: '10px', borderRadius: '10px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                <span style={{ fontSize: '10px', fontWeight: 600, color: '#818cf8' }}>{msg.authorName}</span>
-                <p style={{ color: '#f4f4f5', fontSize: '12px', margin: 0 }}>{msg.text}</p>
+            messages.map((msg) => (
+              <div 
+                key={msg.messageId} 
+                style={{ backgroundColor: '#09090b', border: '1px solid #27272a', padding: '10px 14px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}
+              >
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', flex: 1 }}>
+                  <span style={{ fontSize: '10px', fontWeight: 600, color: '#818cf8' }}>{msg.authorName}</span>
+                  <p style={{ color: '#f4f4f5', fontSize: '12px', margin: 0, wordBreak: 'break-word' }}>{msg.text}</p>
+                </div>
+                
+                {(msg.authorName === user.fullName || user.fullName === 'hello') && (
+                  <button
+                    onClick={() => handleDeleteMessage(msg.messageId)}
+                    style={{ backgroundColor: 'transparent', border: 'none', color: '#52525b', cursor: 'pointer', padding: '4px', borderRadius: '4px' }}
+                    onMouseOver={(e) => e.currentTarget.style.color = '#ef4444'}
+                    onMouseOut={(e) => e.currentTarget.style.color = '#52525b'}
+                  >
+                    <Trash2 size={13} />
+                  </button>
+                )}
               </div>
             ))
           )}
