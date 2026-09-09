@@ -14,6 +14,8 @@ interface MetricsPayload {
   averageAgeHours: number;
 }
 
+const BACKEND_URL = import.meta.env.VITE_API_URL || 'https://onrender.com';
+
 export const AnalyticsDashboard: React.FC = () => {
   const [metrics, setMetrics] = useState<MetricsPayload[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,7 +25,7 @@ export const AnalyticsDashboard: React.FC = () => {
     const fetchAnalytics = async () => {
       try {
         const token = localStorage.getItem('collab_token');
-        const response = await fetch('http://localhost:5000/api/workspace/analytics/velocity', {
+        const response = await fetch(`${BACKEND_URL}/api/workspace/analytics/velocity`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'

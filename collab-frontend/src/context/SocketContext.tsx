@@ -5,13 +5,20 @@ const SocketContext = createContext<Socket | null>(null);
 
 export const useSocket = () => useContext(SocketContext);
 
+// Dynamic address selector resolving to your live Render endpoint in production
+const BACKEND_URL = import.meta.env.VITE_API_URL || 'https://onrender.com';
+
 export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    // Open a persistent websocket pipeline target pointing to our Node.js server port
-    const newSocket = io('http://localhost:5000', {
+    console.log(`🌐 Connecting real-time Socket gateway channel node to: ${BACKEND_URL}`);
+
+    // Open a resilient persistent WebSocket pipeline tracking cloud network paths safely
+    const newSocket = io(BACKEND_URL, {
       transports: ['websocket'],
+      secure: true,
+      reconnectionAttempts: 5,
     });
 
     setSocket(newSocket);
