@@ -349,6 +349,14 @@ Add real screenshots of the deployed application.
 ```text
 Add screenshot here
 ```
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/53cbb8da-3cc4-49ec-95ef-584336af66d4" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/b949c5f8-7093-4b0b-be8b-10244d9294df" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/3ef89fdc-10a5-452a-ae05-21b9fdf98bd5" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/6f6564c2-95cd-4233-a201-dac8b76ef214" />
+
 
 ### Workspace Dashboard
 
@@ -356,23 +364,36 @@ Add screenshot here
 Add screenshot here
 ```
 
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/affc9a3f-b67b-4f51-b34e-e7e6877ed7d2" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/feca4927-0a69-4fb3-b723-3226cfd93467" />
+
+
 ### Kanban Board
 
 ```text
 Add screenshot here
 ```
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/354c9ca9-b30f-4fe5-8e67-7a3a958e87cd" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/91803170-fdb6-4a55-9f18-f1712f1ba1d5" />
 
 ### Real-Time Collaboration
 
 ```text
 Add screenshot here
 ```
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/354c9ca9-b30f-4fe5-8e67-7a3a958e87cd" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/91803170-fdb6-4a55-9f18-f1712f1ba1d5" />
+
 
 ### Analytics
 
 ```text
 Add screenshot here
 ```
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/affc9a3f-b67b-4f51-b34e-e7e6877ed7d2" />
 
 ---
 
